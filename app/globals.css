@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #__next {
+  height: 100%;
+}
+
+body {
+  @apply bg-white text-slate-900;
+}
+
+/* dark mode */
+@media (prefers-color-scheme: dark) {
+  body {
+    @apply bg-slate-900 text-slate-100;
+  }
+}
