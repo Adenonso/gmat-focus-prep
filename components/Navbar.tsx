@@ -6,13 +6,14 @@ import { useAuth } from '../context/AuthContext'
 export default function Navbar() {
   const { theme, toggle } = useTheme()
   const { user, signOut } = useAuth()
+  const pricingEnabled = process.env.NEXT_PUBLIC_PRICING_ENABLED !== 'false'
 
   return (
     <nav className="w-full border-b border-slate-200 dark:border-slate-700">
       <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
         <Link href="/" className="font-semibold text-lg text-primary">GMAT Focus</Link>
         <div className="space-x-4 flex items-center">
-          <Link href="/pricing" className="text-sm">Pricing</Link>
+          {pricingEnabled && <Link href="/pricing" className="text-sm">Pricing</Link>}
           {user ? (
             <>
               <Link href="/dashboard" className="text-sm">Dashboard</Link>

@@ -9,6 +9,7 @@ export default function PricingPage() {
   const { user } = useAuth()
   const [loading, setLoading] = useState(false)
   const [plan, setPlan] = useState<'free' | 'pro' | null>(null)
+  const pricingEnabled = process.env.NEXT_PUBLIC_PRICING_ENABLED !== 'false'
 
   useEffect(() => {
     const fetchPlan = async () => {
@@ -50,6 +51,11 @@ export default function PricingPage() {
     <div>
       <Navbar />
       <main className="max-w-4xl mx-auto px-4 py-8">
+        {!pricingEnabled && (
+          <div className="mb-6 p-4 rounded border bg-yellow-50">
+            <strong>All features are temporarily free.</strong> Upgrades are paused while we simplify access.
+          </div>
+        )}
         <h2 className="text-2xl font-semibold">Pricing</h2>
         <p className="mt-2 text-slate-600">Upgrade to Pro for unlimited questions, mock exams, and AI tutor access.</p>
 
@@ -63,12 +69,18 @@ export default function PricingPage() {
             <h3 className="font-semibold">Pro</h3>
             <p className="mt-2">Unlimited practice, mock exams, AI tutor chat, and personalized study recommendations.</p>
             <div className="mt-4">
-              <button onClick={upgrade} disabled={!user || loading || plan === 'pro'} className="px-4 py-2 bg-primary text-white rounded disabled:opacity-50">
-                {plan === 'pro' ? 'Already Pro' : loading ? 'Upgrading…' : 'Upgrade to Pro'}
-              </button>
+              {pricingEnabled ? (
+                <button onClick={upgrade} disabled={!user || loading || plan === 'pro'} className="px-4 py-2 bg-primary text-white rounded disabled:opacity-50">
+                  {plan === 'pro' ? 'Already Pro' : loading ? 'Upgrading…' : 'Upgrade to Pro'}
+                </button>
+              ) : (
+                <button disabled className="px-4 py-2 bg-primary text-white rounded opacity-50 cursor-not-allowed">
+                  Upgrades paused — Free for now
+                </button>
+              )}
             </div>
             {plan === 'pro' && <p className="mt-2 text-sm text-green-700">You are already on the Pro plan.</p>}
-            {!user && <p className="mt-2 text-sm text-slate-600">Sign in to upgrade your account.</p>}
+            {!user && <p className="mt-2 text-sm text-slate-600">Sign in to access your account (upgrades are currently paused).</p>}
           </div>
         </div>
       </main>
